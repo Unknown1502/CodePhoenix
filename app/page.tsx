@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { Flame, ArrowRight, Code2, Zap, Shield, TrendingUp } from 'lucide-react'
 import PhoenixLogo from '@/components/PhoenixLogo'
