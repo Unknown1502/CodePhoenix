@@ -1,0 +1,46 @@
+{
+  "name": "codephoenix",
+  "version": "1.0.0",
+  "description": "AI-powered platform that resurrects legacy code into modern applications",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "tailwindcss": "^3.3.6",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "framer-motion": "^10.16.16",
+    "reactflow": "^11.10.2",
+    "react-dropzone": "^14.2.3",
+    "monaco-editor": "^0.45.0",
+    "@monaco-editor/react": "^4.6.0",
+    "openai": "^4.20.1",
+    "@anthropic-ai/sdk": "^0.9.1",
+    "tree-sitter": "^0.20.4",
+    "tree-sitter-cli": "^0.20.8",
+    "@vercel/blob": "^0.15.1",
+    "zod": "^3.22.4",
+    "lucide-react": "^0.294.0",
+    "recharts": "^2.10.3",
+    "sharp": "^0.33.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.0.4",
+    "@tailwindcss/typography": "^0.5.10"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
