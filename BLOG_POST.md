@@ -389,8 +389,8 @@ If CodePhoenix became a real product:
 ## The Code
 
 Check it out:
-- **GitHub**: [github.com/yourusername/codephoenix](https://github.com/yourusername/codephoenix)
-- **Live Demo**: [codephoenix.vercel.app](https://codephoenix.vercel.app)
+- **GitHub**: [github.com/Unknown1502/CodePhoenix](https://github.com/Unknown1502/CodePhoenix)
+- **Live Demo**: [code-phoenix-yamx.vercel.app](https://code-phoenix-yamx.vercel.app)
 - **Devpost**: [Link to submission]
 
 Key files to explore:
