@@ -350,23 +350,6 @@ Feel free to use this for your legacy code migrations!
 
 ---
 
-## 🏅 Hackathon Info
-
-**Hackathon**: Kiroween 2025  
-**Category**: Resurrection  
-**Dates**: December 2-5, 2025  
-**Built by**: [Your Name]  
-**Contact**: [Your Email]
-
-### Prizes Targeting
-- ✅ Overall 1st Place: $30,000
-- ✅ Blog Post Prize: $100
-- ✅ Social Media Blitz: $100
-
-**Total Target**: $30,200
-
----
-
 ## 🔗 Links
 
 - **Live Demo**: [codephoenix.vercel.app](https://codephoenix.vercel.app)
