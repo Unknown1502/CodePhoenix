@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MOCK_TRANSFORMATIONS } from '@/lib/mockData'
-import { estimateROI } from '@/app/advanced/roiCalculator'
-import { prepareGithubExportPayload } from '@/app/advanced/githubExport'
 
 export async function POST(request: NextRequest) {
   try {
@@ -41,19 +39,6 @@ export async function POST(request: NextRequest) {
     // Generate code based on target language
     const transformedCode = generateTransformedCode(mockData, targetLanguage, sourceLanguage)
 
-    // Calculate ROI
-    const roi = estimateROI({
-      currentMaintenancePerYearUSD: 150000,
-      migrationCostUSD: 200000,
-      expectedEfficiencyGainPercent: 40
-    })
-
-    // Prepare GitHub export
-    const githubExport = prepareGithubExportPayload(
-      filename.replace(/\.[^.]+$/, ''),
-      [{ path: 'index.ts', content: transformedCode }]
-    )
-
     return NextResponse.json({
       success: true,
       sessionId,
@@ -67,8 +52,6 @@ export async function POST(request: NextRequest) {
         transformedLines: transformedCode.split('\n').length,
         codeReduction: Math.round(((legacyCode.length - transformedCode.length) / legacyCode.length) * 100),
       },
-      roi,
-      githubExport,
     })
   } catch (error) {
     console.error('Transform error:', error)

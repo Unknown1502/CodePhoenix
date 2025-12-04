@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MOCK_ANALYSIS } from '@/lib/mockData'
-import { generateMigrationRoadmap } from '@/app/advanced/migrationRoadmap'
-import { scanForVulnerabilities } from '@/app/advanced/securityScanner'
-import { estimatePerformanceImprovement } from '@/app/advanced/performanceEstimator'
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,20 +34,10 @@ export async function POST(request: NextRequest) {
       // Use mock analysis data
       const baseAnalysis = (MOCK_ANALYSIS as any)[langKey] || MOCK_ANALYSIS.cobol
       
-      // Add advanced features
-      const vulnerabilities = scanForVulnerabilities(code, file.name)
-      const roadmap = generateMigrationRoadmap({ components: [{ name: file.name, complexity: baseAnalysis.complexity }] })
-      const perfEstimate = estimatePerformanceImprovement({ language, architecture: 'monolith' })
-      
       analysisResults.push({
         filename: file.name,
         language,
-        analysis: {
-          ...baseAnalysis,
-          vulnerabilities,
-          roadmap,
-          performanceEstimate: perfEstimate
-        },
+        analysis: baseAnalysis,
       })
     }
 
