@@ -27,8 +27,9 @@ export default function UploadZone() {
 
       if (response.ok) {
         const data = await response.json()
-        // Store file info in sessionStorage for next page
+        // Store file info AND contents in sessionStorage for next page
         sessionStorage.setItem(`files_${data.sessionId}`, JSON.stringify(data.files))
+        sessionStorage.setItem(`fileContents_${data.sessionId}`, JSON.stringify(data.fileContents))
         // Redirect to analysis page
         router.push(`/analyze/${data.sessionId}`)
       } else {

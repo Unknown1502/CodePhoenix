@@ -3,7 +3,7 @@ import { MOCK_ANALYSIS } from '@/lib/mockData'
 
 export async function POST(request: NextRequest) {
   try {
-    const { sessionId, files } = await request.json()
+    const { sessionId, files, fileContents } = await request.json()
 
     if (!sessionId || !files) {
       return NextResponse.json(
@@ -12,19 +12,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get uploaded files from memory
-    const uploadedFiles = (global as any).uploadedFiles?.get(sessionId)
-    if (!uploadedFiles) {
-      return NextResponse.json(
-        { error: 'Session not found' },
-        { status: 404 }
-      )
-    }
-
     const analysisResults = []
 
     for (const file of files) {
-      const code = uploadedFiles.get(file.name)
+      // Get code from request payload (client sends it)
+      const code = fileContents?.[file.name]
       if (!code) continue
 
       // Determine language from file extension

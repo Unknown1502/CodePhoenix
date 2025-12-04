@@ -92,13 +92,25 @@ export default function TransformPage() {
 
     setTransforming(true)
     try {
+      // Get file contents from sessionStorage
+      const fileContentsData = sessionStorage.getItem(`fileContents_${params.sessionId}`)
+      const fileContents = fileContentsData ? JSON.parse(fileContentsData) : {}
+      const legacyCodeContent = fileContents[selectedFile]
+      
+      if (!legacyCodeContent) {
+        console.error('File content not found')
+        setTransforming(false)
+        return
+      }
+
       const response = await fetch('/api/transform', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sessionId: params.sessionId,
           filename: selectedFile,
-          targetLanguage
+          targetLanguage,
+          legacyCode: legacyCodeContent
         })
       })
 

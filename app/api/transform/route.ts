@@ -3,29 +3,12 @@ import { MOCK_TRANSFORMATIONS } from '@/lib/mockData'
 
 export async function POST(request: NextRequest) {
   try {
-    const { sessionId, filename, targetLanguage } = await request.json()
+    const { sessionId, filename, targetLanguage, legacyCode } = await request.json()
 
-    if (!sessionId || !filename || !targetLanguage) {
+    if (!sessionId || !filename || !targetLanguage || !legacyCode) {
       return NextResponse.json(
         { error: 'Missing required parameters' },
         { status: 400 }
-      )
-    }
-
-    // Get uploaded files from memory
-    const uploadedFiles = (global as any).uploadedFiles?.get(sessionId)
-    if (!uploadedFiles) {
-      return NextResponse.json(
-        { error: 'Session not found' },
-        { status: 404 }
-      )
-    }
-
-    const legacyCode = uploadedFiles.get(filename)
-    if (!legacyCode) {
-      return NextResponse.json(
-        { error: 'File not found' },
-        { status: 404 }
       )
     }
 

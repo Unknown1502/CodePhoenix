@@ -354,7 +354,7 @@ Feel free to use this for your legacy code migrations!
 
 - **Live Demo**: [codephoenix.vercel.app](https://codephoenix.vercel.app)
 - **Devpost**: [Link to submission]
-- **Blog Post**: [Link to dev.to post]
+- **Blog Post**: [How I Resurrected Legacy Code with AI](https://dev.to/prajwal_sutar_f78ecf9438e/how-i-resurrected-legacy-code-with-ai-building-codephoenix-for-kiroween-16he)
 - **GitHub**: [github.com/Unknown1502/CodePhoenix](https://github.com/Unknown1502/CodePhoenix)
 - **Twitter**: [@codephoenix](https://twitter.com/codephoenix)
 

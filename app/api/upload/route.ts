@@ -20,19 +20,13 @@ export async function POST(request: NextRequest) {
     // Create unique session ID
     const sessionId = generateId()
 
-    // Store files in memory (mock mode - no filesystem)
+    // Store file contents directly in response (client-side storage)
     const savedFiles = []
+    const fileContents: { [key: string]: string } = {}
+    
     for (const file of files) {
       const text = await file.text()
-      
-      // Store in global Map for session (simple in-memory storage)
-      if (!(global as any).uploadedFiles) {
-        (global as any).uploadedFiles = new Map()
-      }
-      if (!(global as any).uploadedFiles.has(sessionId)) {
-        (global as any).uploadedFiles.set(sessionId, new Map())
-      }
-      (global as any).uploadedFiles.get(sessionId).set(file.name, text)
+      fileContents[file.name] = text
       
       savedFiles.push({
         name: file.name,
@@ -45,6 +39,7 @@ export async function POST(request: NextRequest) {
       success: true,
       sessionId,
       files: savedFiles,
+      fileContents, // Send file contents back to client
       message: `${files.length} file(s) uploaded successfully`,
     })
   } catch (error) {

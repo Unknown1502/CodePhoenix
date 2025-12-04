@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodePhoenix Demo Video - 3 Minutes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes flame {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.2; }
+            50% { transform: translateY(-10px) scale(1.1); opacity: 0.4; }
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(249, 115, 22, 0.8); }
+        }
+        @keyframes rise {
+            0% { transform: translateY(100px) scale(0.8); opacity: 0; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+        
+        .animate-flame { animation: flame 3s ease-in-out infinite; }
+        .animate-glow { animation: glow 2s ease-in-out infinite; }
+        .animate-rise { animation: rise 2s ease-out forwards; }
+        .animate-fadeIn { animation: fadeIn 1s ease-out forwards; }
+        
+        .scene { display: none; }
+        .scene.active { display: block; }
+        
+        .phoenix-gradient {
+            background: linear-gradient(135deg, #fb923c 0%, #f97316 50%, #ea580c 100%);
+        }
+        
+        .code-block {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        
+        .cobol-keyword { color: #569cd6; }
+        .cobol-string { color: #ce9178; }
+        .cobol-comment { color: #6a9955; }
+        
+        .ts-keyword { color: #c586c0; }
+        .ts-function { color: #dcdcaa; }
+        .ts-string { color: #ce9178; }
+        
+        body {
+            background: linear-gradient(to bottom, #18181b, #27272a, #18181b);
+            color: white;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        
+        /* Narration text styling */
+        .narration {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1.5rem 3rem;
+            border-radius: 1rem;
+            max-width: 90%;
+            text-align: center;
+            font-size: 1.5rem;
+            z-index: 1000;
+            border: 2px solid #f97316;
+        }
+        
+        .progress-bar {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            z-index: 1000;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f97316, #fb923c);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="overflow-hidden">
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    
+    <!-- Narration Text -->
+    <div class="narration" id="narration"></div>
+
+    <!-- Scene 1: HOOK (0-15s) -->
+    <div class="scene active" id="scene1" data-duration="15000">
+        <div class="min-h-screen flex items-center justify-center relative">
+            <!-- Animated background -->
+            <div class="absolute inset-0 overflow-hidden opacity-20">
+                <div class="absolute top-0 left-1/4 w-64 h-64 rounded-full blur-3xl animate-flame" style="background: #f97316;"></div>
+                <div class="absolute top-20 right-1/4 w-96 h-96 rounded-full blur-3xl animate-flame" style="background: #f97316; animation-delay: 0.5s;"></div>
+            </div>
+            
+            <div class="relative z-10 text-center px-6">
+                <div class="mb-8 flex justify-center animate-rise">
+                    <svg width="120" height="120" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="drop-shadow-[0_0_20px_rgba(249,115,22,0.5)]">
+                        <path d="M50 10 C30 20, 20 40, 20 60 C20 75, 30 85, 50 90 C70 85, 80 75, 80 60 C80 40, 70 20, 50 10Z" fill="url(#phoenixGradient)"/>
+                        <path d="M20 50 C10 45, 5 40, 10 35 C15 30, 20 35, 25 40" stroke="url(#wingGradient)" stroke-width="3" fill="none"/>
+                        <path d="M80 50 C90 45, 95 40, 90 35 C85 30, 80 35, 75 40" stroke="url(#wingGradient)" stroke-width="3" fill="none"/>
+                        <path d="M50 85 L45 95 L50 90 L55 95 Z" fill="#fb923c"/>
+                        <defs>
+                            <linearGradient id="phoenixGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#fb923c"/>
+                                <stop offset="50%" stop-color="#f97316"/>
+                                <stop offset="100%" stop-color="#ea580c"/>
+                            </linearGradient>
+                            <linearGradient id="wingGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#fdba74"/>
+                                <stop offset="100%" stop-color="#fb923c"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                
+                <h1 class="text-7xl font-bold mb-6 animate-fadeIn" style="animation-delay: 0.5s;">
+                    <span class="text-white">CodePhoenix</span>
+                </h1>
+                
+                <div class="text-3xl text-gray-300 space-y-4 max-w-4xl mx-auto animate-fadeIn" style="animation-delay: 1s;">
+                    <p class="text-red-400 font-bold">🚨 $85 BILLION CRISIS 🚨</p>
+                    <p>220 billion lines of COBOL still in production</p>
+                    <p>Developers retiring. Knowledge disappearing.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scene 2: PROBLEM (15-45s) -->
+    <div class="scene" id="scene2" data-duration="30000">
+        <div class="min-h-screen flex items-center justify-center px-6">
+            <div class="max-w-5xl">
+                <h2 class="text-5xl font-bold text-center mb-12 text-[#f97316]">The Problem</h2>
+                
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="p-8 bg-gray-900 rounded-xl border-2 border-red-500 animate-fadeIn">
+                        <div class="text-6xl font-bold text-red-500 mb-4">$500K - $5M</div>
+                        <div class="text-2xl text-gray-300">Cost per system migration</div>
+                    </div>
+                    
+                    <div class="p-8 bg-gray-900 rounded-xl border-2 border-red-500 animate-fadeIn" style="animation-delay: 0.2s;">
+                        <div class="text-6xl font-bold text-red-500 mb-4">6-18 months</div>
+                        <div class="text-2xl text-gray-300">Typical timeline</div>
+                    </div>
+                    
+                    <div class="p-8 bg-gray-900 rounded-xl border-2 border-red-500 animate-fadeIn" style="animation-delay: 0.4s;">
+                        <div class="text-6xl font-bold text-red-500 mb-4">70%</div>
+                        <div class="text-2xl text-gray-300">Projects fail</div>
+                    </div>
+                    
+                    <div class="p-8 bg-gray-900 rounded-xl border-2 border-red-500 animate-fadeIn" style="animation-delay: 0.6s;">
+                        <div class="text-6xl font-bold text-red-500 mb-4">43%</div>
+                        <div class="text-2xl text-gray-300">Banking systems on COBOL</div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 text-center text-3xl text-gray-400 animate-fadeIn" style="animation-delay: 1s;">
+                    Companies are stuck with unmaintainable code... <span class="text-[#f97316] font-bold">Until now.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scene 3: SOLUTION DEMO (45s - 1:30) -->
+    <div class="scene" id="scene3" data-duration="45000">
+        <div class="min-h-screen flex items-center justify-center px-6">
+            <div class="max-w-7xl w-full">
+                <h2 class="text-5xl font-bold text-center mb-12 text-[#f97316]">Watch the Resurrection</h2>
+                
+                <!-- Upload Animation -->
+                <div class="mb-8 p-12 border-4 border-dashed border-[#f97316] rounded-2xl text-center bg-gray-900 animate-fadeIn" id="uploadZone">
+                    <div class="text-6xl mb-4">📄</div>
+                    <div class="text-3xl text-gray-300">inventory.cbl</div>
+                    <div class="text-xl text-gray-500 mt-2">1980s COBOL - 156 lines</div>
+                </div>
+                
+                <!-- Code Comparison -->
+                <div class="grid grid-cols-2 gap-8" id="codeComparison" style="display: none;">
+                    <div class="animate-fadeIn">
+                        <h3 class="text-2xl font-bold mb-4 text-gray-400">BEFORE: COBOL (1980s)</h3>
+                        <div class="code-block text-sm">
+<pre><span class="cobol-keyword">IDENTIFICATION DIVISION.</span>
+<span class="cobol-keyword">PROGRAM-ID.</span> INVENTORY.
+
+<span class="cobol-keyword">DATA DIVISION.</span>
+<span class="cobol-keyword">WORKING-STORAGE SECTION.</span>
+<span class="cobol-keyword">01</span> ITEM-RECORD.
+   <span class="cobol-keyword">05</span> ITEM-ID      <span class="cobol-keyword">PIC</span> <span class="cobol-string">9(5)</span>.
+   <span class="cobol-keyword">05</span> ITEM-NAME    <span class="cobol-keyword">PIC</span> <span class="cobol-string">X(50)</span>.
+   <span class="cobol-keyword">05</span> ITEM-QTY     <span class="cobol-keyword">PIC</span> <span class="cobol-string">9(5)</span>.
+   <span class="cobol-keyword">05</span> ITEM-PRICE   <span class="cobol-keyword">PIC</span> <span class="cobol-string">9(7)V99</span>.
+
+<span class="cobol-keyword">PROCEDURE DIVISION.</span>
+   <span class="cobol-keyword">PERFORM</span> READ-INVENTORY
+   <span class="cobol-keyword">PERFORM</span> CALCULATE-TOTAL
+   <span class="cobol-keyword">STOP RUN.</span></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="animate-fadeIn" style="animation-delay: 0.5s;">
+                        <h3 class="text-2xl font-bold mb-4 text-[#f97316]">AFTER: TypeScript + React (2024)</h3>
+                        <div class="code-block text-sm">
+<pre><span class="ts-keyword">interface</span> <span class="ts-function">ItemRecord</span> {
+  itemId: <span class="ts-keyword">number</span>;
+  itemName: <span class="ts-keyword">string</span>;
+  itemQty: <span class="ts-keyword">number</span>;
+  itemPrice: <span class="ts-keyword">number</span>;
+}
+
+<span class="ts-keyword">const</span> <span class="ts-function">Inventory</span> = () => {
+  <span class="ts-keyword">const</span> [items, setItems] = 
+    useState&lt;ItemRecord[]&gt;([]);
+  
+  <span class="ts-keyword">const</span> calculateTotal = () => {
+    <span class="ts-keyword">return</span> items.<span class="ts-function">reduce</span>((sum, item) =>
+      sum + item.itemPrice * item.itemQty, 0
+    );
+  };
+};</pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Success Message -->
+                <div class="mt-8 p-8 bg-green-900 border-2 border-green-500 rounded-xl text-center animate-fadeIn" id="successMsg" style="display: none;">
+                    <div class="text-4xl font-bold text-green-400">✅ Transformation Complete!</div>
+                    <div class="text-2xl text-gray-300 mt-4">Business logic preserved • Cloud-ready • CI/CD included</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scene 4: HOW IT WORKS (1:30 - 2:15) -->
+    <div class="scene" id="scene4" data-duration="45000">
+        <div class="min-h-screen flex items-center justify-center px-6">
+            <div class="max-w-6xl">
+                <h2 class="text-5xl font-bold text-center mb-12 text-[#f97316]">Powered by Kiro AI</h2>
+                
+                <div class="space-y-6">
+                    <div class="flex items-center space-x-6 p-6 bg-gray-900 rounded-xl border-2 border-[#f97316] animate-fadeIn">
+                        <div class="text-5xl">📋</div>
+                        <div>
+                            <div class="text-3xl font-bold">Specs</div>
+                            <div class="text-xl text-gray-400">Architecture as code → Complete Next.js project</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-6 p-6 bg-gray-900 rounded-xl border-2 border-[#f97316] animate-fadeIn" style="animation-delay: 0.2s;">
+                        <div class="text-5xl">✨</div>
+                        <div>
+                            <div class="text-3xl font-bold">Vibe Coding</div>
+                            <div class="text-xl text-gray-400">Natural language → React components with animations</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-6 p-6 bg-gray-900 rounded-xl border-2 border-[#f97316] animate-fadeIn" style="animation-delay: 0.4s;">
+                        <div class="text-5xl">🎯</div>
+                        <div>
+                            <div class="text-3xl font-bold">Steering</div>
+                            <div class="text-xl text-gray-400">Quality rules → 95% transformation accuracy</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-6 p-6 bg-gray-900 rounded-xl border-2 border-[#f97316] animate-fadeIn" style="animation-delay: 0.6s;">
+                        <div class="text-5xl">⚡</div>
+                        <div>
+                            <div class="text-3xl font-bold">Agent Hooks</div>
+                            <div class="text-xl text-gray-400">Automated testing, validation, deployment</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-6 p-6 bg-gray-900 rounded-xl border-2 border-[#f97316] animate-fadeIn" style="animation-delay: 0.8s;">
+                        <div class="text-5xl">🧠</div>
+                        <div>
+                            <div class="text-3xl font-bold">MCP Servers</div>
+                            <div class="text-xl text-gray-400">Custom parsers → Expert COBOL/Fortran understanding</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 text-center text-3xl font-bold text-[#f97316] animate-fadeIn" style="animation-delay: 1s;">
+                    64 Legacy Languages → 40+ Modern Frameworks
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scene 5: IMPACT (2:15 - 2:45) -->
+    <div class="scene" id="scene5" data-duration="30000">
+        <div class="min-h-screen flex items-center justify-center px-6">
+            <div class="max-w-6xl text-center">
+                <h2 class="text-6xl font-bold mb-12 text-[#f97316]">Business Impact</h2>
+                
+                <div class="grid grid-cols-3 gap-8 mb-12">
+                    <div class="p-8 bg-gradient-to-br from-[#f97316] to-[#ea580c] rounded-xl animate-fadeIn">
+                        <div class="text-5xl font-bold mb-4">Weeks</div>
+                        <div class="text-xl">instead of years</div>
+                    </div>
+                    
+                    <div class="p-8 bg-gradient-to-br from-[#f97316] to-[#ea580c] rounded-xl animate-fadeIn" style="animation-delay: 0.2s;">
+                        <div class="text-5xl font-bold mb-4">60%</div>
+                        <div class="text-xl">Debt reduction</div>
+                    </div>
+                    
+                    <div class="p-8 bg-gradient-to-br from-[#f97316] to-[#ea580c] rounded-xl animate-fadeIn" style="animation-delay: 0.4s;">
+                        <div class="text-5xl font-bold mb-4">$200M+</div>
+                        <div class="text-xl">Exit potential</div>
+                    </div>
+                </div>
+                
+                <div class="space-y-4 text-2xl text-gray-300 animate-fadeIn" style="animation-delay: 0.6s;">
+                    <p>✅ Banks modernize critical systems</p>
+                    <p>✅ Government eliminates vulnerabilities</p>
+                    <p>✅ Fortune 500 reduces technical debt</p>
+                    <p class="text-3xl font-bold text-[#f97316] mt-8">This solves an $85 BILLION problem</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scene 6: CALL TO ACTION (2:45 - 3:00) -->
+    <div class="scene" id="scene6" data-duration="15000">
+        <div class="min-h-screen flex items-center justify-center relative">
+            <!-- Animated background -->
+            <div class="absolute inset-0 overflow-hidden opacity-30">
+                <div class="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl animate-flame" style="background: #f97316;"></div>
+                <div class="absolute top-20 right-1/4 w-96 h-96 rounded-full blur-3xl animate-flame" style="background: #f97316; animation-delay: 0.5s;"></div>
+            </div>
+            
+            <div class="relative z-10 text-center px-6">
+                <div class="mb-8 flex justify-center animate-rise">
+                    <svg width="120" height="120" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="drop-shadow-[0_0_40px_rgba(249,115,22,0.8)]">
+                        <path d="M50 10 C30 20, 20 40, 20 60 C20 75, 30 85, 50 90 C70 85, 80 75, 80 60 C80 40, 70 20, 50 10Z" fill="url(#phoenixGradient2)"/>
+                        <path d="M20 50 C10 45, 5 40, 10 35 C15 30, 20 35, 25 40" stroke="url(#wingGradient2)" stroke-width="3" fill="none"/>
+                        <path d="M80 50 C90 45, 95 40, 90 35 C85 30, 80 35, 75 40" stroke="url(#wingGradient2)" stroke-width="3" fill="none"/>
+                        <path d="M50 85 L45 95 L50 90 L55 95 Z" fill="#fb923c"/>
+                        <defs>
+                            <linearGradient id="phoenixGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#fb923c"/>
+                                <stop offset="50%" stop-color="#f97316"/>
+                                <stop offset="100%" stop-color="#ea580c"/>
+                            </linearGradient>
+                            <linearGradient id="wingGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#fdba74"/>
+                                <stop offset="100%" stop-color="#fb923c"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                
+                <h1 class="text-7xl font-bold mb-8 animate-fadeIn" style="animation-delay: 0.5s;">
+                    <span class="text-white">Try </span>
+                    <span class="text-[#f97316]">CodePhoenix</span>
+                    <span class="text-white"> Now</span>
+                </h1>
+                
+                <div class="text-3xl text-gray-300 mb-8 animate-fadeIn" style="animation-delay: 1s;">
+                    Upload your legacy code and watch it rise from the ashes
+                </div>
+                
+                <div class="text-2xl text-gray-400 animate-fadeIn" style="animation-delay: 1.5s;">
+                    code-phoenix-hv1aoj6fj-prajwals-projects-c3a0e345.vercel.app
+                </div>
+                
+                <div class="mt-12 text-4xl font-bold text-[#f97316] animate-fadeIn animate-glow" style="animation-delay: 2s;">
+                    🔥 Bringing Dead Code Back to Life 🔥
+                </div>
+                
+                <div class="mt-8 text-xl text-gray-500 animate-fadeIn" style="animation-delay: 2.5s;">
+                    Built with Kiro AI for Kiroween 2025
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const narrations = [
+            { text: "Right now, the world's banks are running on code written in the 1970s. 220 billion lines of COBOL are still in production. The developers who wrote it are retiring. Their knowledge is disappearing. This is an $85 billion crisis. Meet CodePhoenix.", duration: 15000 },
+            { text: "Legacy code modernization is painfully slow and expensive. It costs $500,000 to $5 million per system. Takes 6 to 18 months. And 70% of projects fail. Companies are stuck with COBOL, Visual Basic 6, Fortran, and PHP code they can't maintain or upgrade. Until now.", duration: 30000 },
+            { text: "CodePhoenix uses AI to resurrect dead code. Watch this. I'm uploading a real COBOL inventory system from the 1980s. 156 lines of mainframe code. CodePhoenix analyzes it in seconds. It understands the business logic, the data structures, the security vulnerabilities. Now I click Transform. Watch as 50-year-old COBOL becomes modern TypeScript with React. Side-by-side comparison. The business logic is preserved perfectly. Export as a containerized, cloud-ready application with CI/CD pipelines included.", duration: 45000 },
+            { text: "I built CodePhoenix using Kiro AI's 5 features. Specs defined the architecture. Vibe Coding generated React components with animations. Steering rules ensure 95% transformation accuracy. Agent Hooks automate testing and deployment. And custom MCP servers give the AI expert-level understanding of COBOL and Fortran. The result? A production-ready platform that supports 64 legacy languages and 40 modern frameworks.", duration: 45000 },
+            { text: "CodePhoenix solves an $85 billion problem. Banks can modernize in weeks instead of years. Government agencies can eliminate security vulnerabilities. Fortune 500 companies can reduce technical debt by 60%. This isn't just a hackathon project. This is a venture-backable startup idea with $200 million exit potential.", duration: 30000 },
+            { text: "Try CodePhoenix now at the link below. Upload your legacy code and watch it rise from the ashes. Built with Kiro AI for Kiroween 2025. CodePhoenix - bringing dead code back to life.", duration: 15000 }
+        ];
+
+        let currentScene = 0;
+        let sceneStartTime = Date.now();
+        let totalDuration = 180000; // 3 minutes
+        let videoStartTime = Date.now();
+
+        function updateNarration(index) {
+            document.getElementById('narration').textContent = narrations[index].text;
+        }
+
+        function updateProgress() {
+            const elapsed = Date.now() - videoStartTime;
+            const progress = (elapsed / totalDuration) * 100;
+            document.getElementById('progressFill').style.width = Math.min(progress, 100) + '%';
+        }
+
+        function nextScene() {
+            const scenes = document.querySelectorAll('.scene');
+            scenes[currentScene].classList.remove('active');
+            currentScene++;
+            
+            if (currentScene >= scenes.length) {
+                // Video complete - loop back
+                currentScene = 0;
+                videoStartTime = Date.now();
+            }
+            
+            scenes[currentScene].classList.add('active');
+            updateNarration(currentScene);
+            sceneStartTime = Date.now();
+            
+            // Scene 3 specific animations
+            if (currentScene === 2) {
+                setTimeout(() => {
+                    document.getElementById('codeComparison').style.display = 'grid';
+                }, 5000);
+                setTimeout(() => {
+                    document.getElementById('uploadZone').style.display = 'none';
+                    document.getElementById('successMsg').style.display = 'block';
+                }, 35000);
+            }
+        }
+
+        function checkSceneTransition() {
+            const currentSceneDuration = narrations[currentScene].duration;
+            if (Date.now() - sceneStartTime >= currentSceneDuration) {
+                nextScene();
+            }
+            updateProgress();
+        }
+
+        // Initialize
+        updateNarration(0);
+        setInterval(checkSceneTransition, 100);
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextScene();
+            if (e.key === 'r') {
+                currentScene = 0;
+                videoStartTime = Date.now();
+                document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+                document.querySelector('.scene').classList.add('active');
+                updateNarration(0);
+            }
+        });
+
+        console.log('🎬 Demo Video Controls:');
+        console.log('→ Arrow Right: Next scene');
+        console.log('R: Restart video');
+        console.log('Video will auto-play and loop');
+    </script>
+</body>
+</html>

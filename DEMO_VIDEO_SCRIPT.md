@@ -319,7 +319,7 @@ Timeline: 72 hours
 🔗 Links:
 • Live Demo: https://codephoenix.vercel.app
 • GitHub: https://github.com/yourusername/codephoenix
-• Blog Post: [dev.to link]
+• Blog Post: https://dev.to/prajwal_sutar_f78ecf9438e/how-i-resurrected-legacy-code-with-ai-building-codephoenix-for-kiroween-16he
 • Devpost: [link]
 
 💰 Business Impact:

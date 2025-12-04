@@ -58,7 +58,9 @@ export default function AnalyzePage() {
       try {
         // Get uploaded files from sessionStorage
         const filesData = sessionStorage.getItem(`files_${params.sessionId}`)
+        const fileContentsData = sessionStorage.getItem(`fileContents_${params.sessionId}`)
         const files = filesData ? JSON.parse(filesData) : []
+        const fileContents = fileContentsData ? JSON.parse(fileContentsData) : {}
         
         if (files.length === 0) {
           console.error('No files found in session')
@@ -72,7 +74,8 @@ export default function AnalyzePage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
             sessionId: params.sessionId,
-            files: files
+            files: files,
+            fileContents: fileContents
           })
         })
         
