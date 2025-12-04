@@ -1428,6 +1428,1084 @@ export class InventoryController {
 }`
   }
 
-  // For unmatched languages, return generic TypeScript
-  return mockData.transformed
+  // Generic fallback for all other languages
+  return generateGenericTransformation(targetLanguage, sourceLanguage)
+}
+
+function generateGenericTransformation(targetLanguage: string, sourceLanguage: string): string {
+  const baseComment = `Modernized from ${sourceLanguage} to ${targetLanguage}`
+  
+  // Language-specific templates
+  const languageTemplates: { [key: string]: string } = {
+    'Flask': `"""
+${baseComment}
+"""
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+class ItemRecord:
+    def __init__(self, item_id, item_name, item_price, item_quantity):
+        self.item_id = item_id
+        self.item_name = item_name
+        self.item_price = item_price
+        self.item_quantity = item_quantity
+    
+    def to_dict(self):
+        return {
+            'itemId': self.item_id,
+            'itemName': self.item_name,
+            'itemPrice': self.item_price,
+            'itemQuantity': self.item_quantity
+        }
+
+class InventorySystem:
+    def __init__(self):
+        self.total_value = 0.0
+        self.items = []
+    
+    def process_item(self):
+        item = ItemRecord(123456, "Widget A", 99.99, 100)
+        self.items.append(item)
+        self.total_value += item.item_price * item.item_quantity
+        return item
+
+inventory = InventorySystem()
+
+@app.route('/api/inventory/process', methods=['POST'])
+def process_item():
+    item = inventory.process_item()
+    return jsonify(item.to_dict())
+
+@app.route('/api/inventory/summary', methods=['GET'])
+def get_summary():
+    return jsonify({
+        'totalValue': inventory.total_value,
+        'itemCount': len(inventory.items),
+        'items': [item.to_dict() for item in inventory.items]
+    })
+
+if __name__ == '__main__':
+    app.run(debug=True)`,
+
+    'Laravel': `<?php
+
+namespace App\\Http\\Controllers;
+
+use Illuminate\\Http\\Request;
+
+// ${baseComment}
+
+class ItemRecord
+{
+    public int $itemId;
+    public string $itemName;
+    public float $itemPrice;
+    public int $itemQuantity;
+
+    public function __construct(int $itemId, string $itemName, float $itemPrice, int $itemQuantity)
+    {
+        $this->itemId = $itemId;
+        $this->itemName = $itemName;
+        $this->itemPrice = $itemPrice;
+        $this->itemQuantity = $itemQuantity;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'itemId' => $this->itemId,
+            'itemName' => $this->itemName,
+            'itemPrice' => $this->itemPrice,
+            'itemQuantity' => $this->itemQuantity,
+        ];
+    }
+}
+
+class InventoryController extends Controller
+{
+    private float $totalValue = 0.0;
+    private array $items = [];
+
+    public function processItem(Request $request)
+    {
+        $item = new ItemRecord(123456, "Widget A", 99.99, 100);
+        $this->items[] = $item;
+        $this->totalValue += $item->itemPrice * $item->itemQuantity;
+
+        return response()->json($item->toArray());
+    }
+
+    public function getSummary()
+    {
+        return response()->json([
+            'totalValue' => $this->totalValue,
+            'itemCount' => count($this->items),
+            'items' => array_map(fn($item) => $item->toArray(), $this->items),
+        ]);
+    }
+}`,
+
+    'Node.js + Express': `const express = require('express');
+const app = express();
+
+// ${baseComment}
+
+class ItemRecord {
+  constructor(itemId, itemName, itemPrice, itemQuantity) {
+    this.itemId = itemId;
+    this.itemName = itemName;
+    this.itemPrice = itemPrice;
+    this.itemQuantity = itemQuantity;
+  }
+}
+
+class InventorySystem {
+  constructor() {
+    this.totalValue = 0;
+    this.items = [];
+  }
+
+  processItem() {
+    const item = new ItemRecord(123456, "Widget A", 99.99, 100);
+    this.items.push(item);
+    this.totalValue += item.itemPrice * item.itemQuantity;
+    return item;
+  }
+
+  getSummary() {
+    return {
+      totalValue: this.totalValue,
+      itemCount: this.items.length,
+      items: this.items
+    };
+  }
+}
+
+const inventory = new InventorySystem();
+
+app.use(express.json());
+
+app.post('/api/inventory/process', (req, res) => {
+  const item = inventory.processItem();
+  res.json(item);
+});
+
+app.get('/api/inventory/summary', (req, res) => {
+  res.json(inventory.getSummary());
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(\`Server running on port \${PORT}\`);
+});`,
+
+    'React Native': `import React, { useState, useEffect } from 'react';
+import { View, Text, Button, StyleSheet, FlatList } from 'react-native';
+
+// ${baseComment}
+
+interface Item {
+  itemId: number;
+  itemName: string;
+  itemPrice: number;
+  itemQuantity: number;
+}
+
+const InventorySystem = () => {
+  const [totalValue, setTotalValue] = useState(0);
+  const [items, setItems] = useState<Item[]>([]);
+
+  const processItem = () => {
+    const item: Item = {
+      itemId: 123456,
+      itemName: 'Widget A',
+      itemPrice: 99.99,
+      itemQuantity: 100
+    };
+
+    setItems(prev => [...prev, item]);
+    setTotalValue(prev => prev + item.itemPrice * item.itemQuantity);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Inventory Management</Text>
+      
+      <View style={styles.summary}>
+        <Text style={styles.summaryText}>
+          Total Value: ` + '$' + `{totalValue.toFixed(2)}
+        </Text>
+        <Text style={styles.summaryText}>
+          Items: {items.length}
+        </Text>
+      </View>
+
+      <Button title="Process Item" onPress={processItem} />
+
+      <FlatList
+        data={items}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <Text>{item.itemName}</Text>
+            <Text>` + '$' + `{item.itemPrice}</Text>
+          </View>
+        )}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff'
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20
+  },
+  summary: {
+    backgroundColor: '#f5f5f5',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 15
+  },
+  summaryText: {
+    fontSize: 16,
+    marginBottom: 5
+  },
+  item: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    marginVertical: 5
+  }
+});
+
+export default InventorySystem;`,
+
+    'Flutter': `import 'package:flutter/material.dart';
+
+// ${baseComment}
+
+class ItemRecord {
+  final int itemId;
+  final String itemName;
+  final double itemPrice;
+  final int itemQuantity;
+
+  ItemRecord({
+    required this.itemId,
+    required this.itemName,
+    required this.itemPrice,
+    required this.itemQuantity,
+  });
+}
+
+class InventorySystem extends StatefulWidget {
+  @override
+  _InventorySystemState createState() => _InventorySystemState();
+}
+
+class _InventorySystemState extends State<InventorySystem> {
+  double totalValue = 0.0;
+  List<ItemRecord> items = [];
+
+  void processItem() {
+    setState(() {
+      final item = ItemRecord(
+        itemId: 123456,
+        itemName: 'Widget A',
+        itemPrice: 99.99,
+        itemQuantity: 100,
+      );
+
+      items.add(item);
+      totalValue += item.itemPrice * item.itemQuantity;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Inventory Management'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Card(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text('Total Value: ` + '$' + `\${totalValue.toFixed(2)}',
+                        style: TextStyle(fontSize: 18)),
+                    Text('Items: \${items.length}',
+                        style: TextStyle(fontSize: 18)),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: processItem,
+              child: Text('Process Item'),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(item.itemName),
+                      trailing: Text('` + '$' + `\${item.itemPrice}'),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}`,
+
+    'Swift UI': `import SwiftUI
+
+// ${baseComment}
+
+struct ItemRecord: Identifiable {
+    let id = UUID()
+    let itemId: Int
+    let itemName: String
+    let itemPrice: Double
+    let itemQuantity: Int
+}
+
+class InventoryViewModel: ObservableObject {
+    @Published var totalValue: Double = 0.0
+    @Published var items: [ItemRecord] = []
+    
+    func processItem() {
+        let item = ItemRecord(
+            itemId: 123456,
+            itemName: "Widget A",
+            itemPrice: 99.99,
+            itemQuantity: 100
+        )
+        
+        items.append(item)
+        totalValue += item.itemPrice * Double(item.itemQuantity)
+    }
+}
+
+struct InventoryView: View {
+    @StateObject private var viewModel = InventoryViewModel()
+    
+    var body: some View {
+        VStack {
+            Text("Inventory Management")
+                .font(.largeTitle)
+                .padding()
+            
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Total Value: ` + '$' + `\\(viewModel.totalValue, specifier: "%.2f")")
+                Text("Items: \\(viewModel.items.count)")
+            }
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(10)
+            
+            Button("Process Item") {
+                viewModel.processItem()
+            }
+            .padding()
+            
+            List(viewModel.items) { item in
+                HStack {
+                    Text(item.itemName)
+                    Spacer()
+                    Text("` + '$' + `\\(item.itemPrice, specifier: "%.2f")")
+                }
+            }
+        }
+        .padding()
+    }
+}`,
+
+    'Elixir': `defmodule InventoryManagement.ItemRecord do
+  # ${baseComment}
+  
+  defstruct [:item_id, :item_name, :item_price, :item_quantity]
+  
+  def new(item_id, item_name, item_price, item_quantity) do
+    %__MODULE__{
+      item_id: item_id,
+      item_name: item_name,
+      item_price: item_price,
+      item_quantity: item_quantity
+    }
+  end
+end
+
+defmodule InventoryManagement.System do
+  alias InventoryManagement.ItemRecord
+  
+  defstruct total_value: 0.0, items: []
+  
+  def new do
+    %__MODULE__{}
+  end
+  
+  def process_item(system) do
+    item = ItemRecord.new(123456, "Widget A", 99.99, 100)
+    
+    new_total = system.total_value + (item.item_price * item.item_quantity)
+    new_items = [item | system.items]
+    
+    %{system | total_value: new_total, items: new_items}
+  end
+  
+  def get_summary(system) do
+    %{
+      total_value: system.total_value,
+      item_count: length(system.items),
+      items: system.items
+    }
+  end
+end`,
+
+    'Scala': `// ${baseComment}
+
+case class ItemRecord(
+  itemId: Int,
+  itemName: String,
+  itemPrice: Double,
+  itemQuantity: Int
+)
+
+class InventorySystem {
+  private var totalValue: Double = 0.0
+  private var items: List[ItemRecord] = List()
+  
+  def processItem(): ItemRecord = {
+    val item = ItemRecord(123456, "Widget A", 99.99, 100)
+    items = items :+ item
+    totalValue += item.itemPrice * item.itemQuantity
+    item
+  }
+  
+  def getSummary: Map[String, Any] = {
+    Map(
+      "totalValue" -> totalValue,
+      "itemCount" -> items.length,
+      "items" -> items
+    )
+  }
+}
+
+object InventoryApp extends App {
+  val system = new InventorySystem()
+  system.processItem()
+  println(system.getSummary)
+}`,
+
+    'F#': `// ${baseComment}
+
+type ItemRecord = {
+    ItemId: int
+    ItemName: string
+    ItemPrice: float
+    ItemQuantity: int
+}
+
+type InventorySystem() =
+    let mutable totalValue = 0.0
+    let mutable items: ItemRecord list = []
+    
+    member this.ProcessItem() =
+        let item = {
+            ItemId = 123456
+            ItemName = "Widget A"
+            ItemPrice = 99.99
+            ItemQuantity = 100
+        }
+        items <- item :: items
+        totalValue <- totalValue + (item.ItemPrice * float item.ItemQuantity)
+        item
+    
+    member this.GetSummary() =
+        (totalValue, List.length items, items)
+
+[<EntryPoint>]
+let main argv =
+    let system = InventorySystem()
+    let item = system.ProcessItem()
+    let (total, count, items) = system.GetSummary()
+    printfn "Total Value: ` + '$' + `%.2f" total
+    printfn "Items: %d" count
+    0`,
+
+    'Jetpack Compose': `import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+
+// ${baseComment}
+
+data class ItemRecord(
+    val itemId: Int,
+    val itemName: String,
+    val itemPrice: Double,
+    val itemQuantity: Int
+)
+
+@Composable
+fun InventoryScreen() {
+    var totalValue by remember { mutableStateOf(0.0) }
+    var items by remember { mutableStateOf(listOf<ItemRecord>()) }
+    
+    fun processItem() {
+        val item = ItemRecord(123456, "Widget A", 99.99, 100)
+        items = items + item
+        totalValue += item.itemPrice * item.itemQuantity
+    }
+    
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(
+            text = "Inventory Management",
+            style = MaterialTheme.typography.headlineLarge
+        )
+        
+        Card(modifier = Modifier.padding(vertical = 16.dp)) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text("Total Value: ` + '$' + `%.2f".format(totalValue))
+                Text("Items: \${items.size}")
+            }
+        }
+        
+        Button(onClick = { processItem() }) {
+            Text("Process Item")
+        }
+        
+        LazyColumn {
+            items(items) { item ->
+                Card(modifier = Modifier.padding(vertical = 4.dp)) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(item.itemName)
+                        Text("` + '$' + `\${item.itemPrice}")
+                    }
+                }
+            }
+        }
+    }
+}`,
+
+    'Solid.js': `import { createSignal, For } from 'solid-js';
+
+// ${baseComment}
+
+interface Item {
+  itemId: number;
+  itemName: string;
+  itemPrice: number;
+  itemQuantity: number;
+}
+
+function InventorySystem() {
+  const [totalValue, setTotalValue] = createSignal(0);
+  const [items, setItems] = createSignal<Item[]>([]);
+
+  const processItem = () => {
+    const item: Item = {
+      itemId: 123456,
+      itemName: 'Widget A',
+      itemPrice: 99.99,
+      itemQuantity: 100
+    };
+
+    setItems(prev => [...prev, item]);
+    setTotalValue(prev => prev + item.itemPrice * item.itemQuantity);
+  };
+
+  return (
+    <div class="inventory-system">
+      <h1>Inventory Management System</h1>
+      
+      <div class="summary">
+        <p>Total Value: ` + '$' + `{totalValue().toFixed(2)}</p>
+        <p>Items: {items().length}</p>
+      </div>
+
+      <button onClick={processItem}>Process Item</button>
+
+      <div class="items-list">
+        <For each={items()}>
+          {(item) => (
+            <div class="item">
+              <span>{item.itemName}</span>
+              <span>` + '$' + `{item.itemPrice}</span>
+            </div>
+          )}
+        </For>
+      </div>
+    </div>
+  );
+}
+
+export default InventorySystem;`,
+
+    'Qwik': `import { component$, useSignal } from '@builder.io/qwik';
+
+// ${baseComment}
+
+interface Item {
+  itemId: number;
+  itemName: string;
+  itemPrice: number;
+  itemQuantity: number;
+}
+
+export default component$(() => {
+  const totalValue = useSignal(0);
+  const items = useSignal<Item[]>([]);
+
+  const processItem$ = $(() => {
+    const item: Item = {
+      itemId: 123456,
+      itemName: 'Widget A',
+      itemPrice: 99.99,
+      itemQuantity: 100
+    };
+
+    items.value = [...items.value, item];
+    totalValue.value += item.itemPrice * item.itemQuantity;
+  });
+
+  return (
+    <div class="inventory-system">
+      <h1>Inventory Management System</h1>
+      
+      <div class="summary">
+        <p>Total Value: ` + '$' + `{totalValue.value.toFixed(2)}</p>
+        <p>Items: {items.value.length}</p>
+      </div>
+
+      <button onClick$={processItem$}>Process Item</button>
+
+      <div class="items-list">
+        {items.value.map((item, idx) => (
+          <div key={idx} class="item">
+            <span>{item.itemName}</span>
+            <span>` + '$' + `{item.itemPrice}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+});`,
+
+    'Serverless (AWS Lambda)': `// ${baseComment}
+
+interface ItemRecord {
+  itemId: number;
+  itemName: string;
+  itemPrice: number;
+  itemQuantity: number;
+}
+
+interface InventoryState {
+  totalValue: number;
+  items: ItemRecord[];
+}
+
+// DynamoDB helper (pseudo-code)
+const getState = async (): Promise<InventoryState> => {
+  // Fetch from DynamoDB
+  return { totalValue: 0, items: [] };
+};
+
+const saveState = async (state: InventoryState): Promise<void> => {
+  // Save to DynamoDB
+};
+
+export const processItemHandler = async (event: any) => {
+  const state = await getState();
+  
+  const item: ItemRecord = {
+    itemId: 123456,
+    itemName: 'Widget A',
+    itemPrice: 99.99,
+    itemQuantity: 100
+  };
+
+  state.items.push(item);
+  state.totalValue += item.itemPrice * item.itemQuantity;
+
+  await saveState(state);
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify(item)
+  };
+};
+
+export const getSummaryHandler = async (event: any) => {
+  const state = await getState();
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      totalValue: state.totalValue,
+      itemCount: state.items.length,
+      items: state.items
+    })
+  };
+};`,
+
+    'Azure Functions': `// ${baseComment}
+
+import { AzureFunction, Context, HttpRequest } from "@azure/functions";
+
+interface ItemRecord {
+  itemId: number;
+  itemName: string;
+  itemPrice: number;
+  itemQuantity: number;
+}
+
+const processItem: AzureFunction = async function (
+  context: Context,
+  req: HttpRequest
+): Promise<void> {
+  const item: ItemRecord = {
+    itemId: 123456,
+    itemName: 'Widget A',
+    itemPrice: 99.99,
+    itemQuantity: 100
+  };
+
+  // Store in Azure Table Storage or Cosmos DB
+  context.bindings.outputItem = item;
+
+  context.res = {
+    status: 200,
+    body: item
+  };
+};
+
+export default processItem;`,
+
+    'Google Cloud Functions': `// ${baseComment}
+
+const functions = require('@google-cloud/functions-framework');
+
+interface ItemRecord {
+  itemId: number;
+  itemName: string;
+  itemPrice: number;
+  itemQuantity: number;
+}
+
+functions.http('processItem', (req: any, res: any) => {
+  const item: ItemRecord = {
+    itemId: 123456,
+    itemName: 'Widget A',
+    itemPrice: 99.99,
+    itemQuantity: 100
+  };
+
+  // Store in Firestore
+  res.status(200).json(item);
+});
+
+functions.http('getSummary', async (req: any, res: any) => {
+  // Fetch from Firestore
+  const summary = {
+    totalValue: 0,
+    itemCount: 0,
+    items: []
+  };
+
+  res.status(200).json(summary);
+});`,
+
+    'GraphQL API': `// ${baseComment}
+
+import { GraphQLObjectType, GraphQLSchema, GraphQLInt, GraphQLFloat, GraphQLString, GraphQLList } from 'graphql';
+
+const ItemType = new GraphQLObjectType({
+  name: 'Item',
+  fields: {
+    itemId: { type: GraphQLInt },
+    itemName: { type: GraphQLString },
+    itemPrice: { type: GraphQLFloat },
+    itemQuantity: { type: GraphQLInt }
+  }
+});
+
+const SummaryType = new GraphQLObjectType({
+  name: 'Summary',
+  fields: {
+    totalValue: { type: GraphQLFloat },
+    itemCount: { type: GraphQLInt },
+    items: { type: new GraphQLList(ItemType) }
+  }
+});
+
+const RootMutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    processItem: {
+      type: ItemType,
+      resolve: () => {
+        const item = {
+          itemId: 123456,
+          itemName: 'Widget A',
+          itemPrice: 99.99,
+          itemQuantity: 100
+        };
+        return item;
+      }
+    }
+  }
+});
+
+const RootQuery = new GraphQLObjectType({
+  name: 'Query',
+  fields: {
+    summary: {
+      type: SummaryType,
+      resolve: () => ({
+        totalValue: 0,
+        itemCount: 0,
+        items: []
+      })
+    }
+  }
+});
+
+export const schema = new GraphQLSchema({
+  query: RootQuery,
+  mutation: RootMutation
+});`,
+
+    'gRPC Service': `// ${baseComment}
+
+syntax = "proto3";
+
+package inventory;
+
+service InventoryService {
+  rpc ProcessItem(ProcessItemRequest) returns (ItemRecord);
+  rpc GetSummary(GetSummaryRequest) returns (InventorySummary);
+}
+
+message ItemRecord {
+  int32 item_id = 1;
+  string item_name = 2;
+  double item_price = 3;
+  int32 item_quantity = 4;
+}
+
+message ProcessItemRequest {}
+
+message GetSummaryRequest {}
+
+message InventorySummary {
+  double total_value = 1;
+  int32 item_count = 2;
+  repeated ItemRecord items = 3;
+}
+
+// Implementation (TypeScript with grpc-js)
+import * as grpc from '@grpc/grpc-js';
+
+const server = new grpc.Server();
+
+server.addService(InventoryServiceService, {
+  processItem: (call, callback) => {
+    const item = {
+      itemId: 123456,
+      itemName: 'Widget A',
+      itemPrice: 99.99,
+      itemQuantity: 100
+    };
+    callback(null, item);
+  },
+  getSummary: (call, callback) => {
+    callback(null, {
+      totalValue: 0,
+      itemCount: 0,
+      items: []
+    });
+  }
+});`,
+
+    'WebAssembly': `// ${baseComment}
+// Compiled from Rust to WebAssembly
+
+#[wasm_bindgen]
+pub struct ItemRecord {
+    item_id: u32,
+    item_name: String,
+    item_price: f64,
+    item_quantity: u32,
+}
+
+#[wasm_bindgen]
+impl ItemRecord {
+    #[wasm_bindgen(constructor)]
+    pub fn new(item_id: u32, item_name: String, item_price: f64, item_quantity: u32) -> ItemRecord {
+        ItemRecord {
+            item_id,
+            item_name,
+            item_price,
+            item_quantity,
+        }
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn item_name(&self) -> String {
+        self.item_name.clone()
+    }
+}
+
+#[wasm_bindgen]
+pub struct InventorySystem {
+    total_value: f64,
+    items: Vec<ItemRecord>,
+}
+
+#[wasm_bindgen]
+impl InventorySystem {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> InventorySystem {
+        InventorySystem {
+            total_value: 0.0,
+            items: Vec::new(),
+        }
+    }
+
+    pub fn process_item(&mut self) {
+        let item = ItemRecord::new(123456, "Widget A".to_string(), 99.99, 100);
+        self.total_value += item.item_price * item.item_quantity as f64;
+        self.items.push(item);
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn total_value(&self) -> f64 {
+        self.total_value
+    }
+}`,
+
+    'Kubernetes CRD': `# ${baseComment}
+
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: inventorysystems.inventory.example.com
+spec:
+  group: inventory.example.com
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                itemId:
+                  type: integer
+                itemName:
+                  type: string
+                itemPrice:
+                  type: number
+                itemQuantity:
+                  type: integer
+  scope: Namespaced
+  names:
+    plural: inventorysystems
+    singular: inventorysystem
+    kind: InventorySystem
+
+---
+apiVersion: inventory.example.com/v1
+kind: InventorySystem
+metadata:
+  name: widget-a
+spec:
+  itemId: 123456
+  itemName: Widget A
+  itemPrice: 99.99
+  itemQuantity: 100`
+  }
+
+  // Return specific template if available
+  if (languageTemplates[targetLanguage]) {
+    return languageTemplates[targetLanguage]
+  }
+
+  // Final fallback - return TypeScript with comment about language
+  return `// ${baseComment}
+// Note: Generic transformation - specific ${targetLanguage} implementation available on request
+
+interface ItemRecord {
+  itemId: number;
+  itemName: string;
+  itemPrice: number;
+  itemQuantity: number;
+}
+
+class InventorySystem {
+  private totalValue: number = 0;
+  private items: ItemRecord[] = [];
+
+  processItem(): ItemRecord {
+    const item: ItemRecord = {
+      itemId: 123456,
+      itemName: 'Widget A',
+      itemPrice: 99.99,
+      itemQuantity: 100
+    };
+
+    this.items.push(item);
+    this.totalValue += item.itemPrice * item.itemQuantity;
+    return item;
+  }
+
+  getSummary() {
+    return {
+      totalValue: this.totalValue,
+      itemCount: this.items.length,
+      items: this.items
+    };
+  }
+}
+
+const system = new InventorySystem();
+system.processItem();
+console.log(system.getSummary());`
 }
