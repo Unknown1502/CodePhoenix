@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MOCK_TRANSFORMATIONS } from '@/lib/mockData'
 
+const USE_REAL_AI = !!process.env.OPENAI_API_KEY // Auto-detect: use AI if key exists, otherwise use demo
+
 export async function POST(request: NextRequest) {
   try {
-    const { sessionId, filename, targetLanguage, legacyCode } = await request.json()
+    const { sessionId, filename, targetLanguage, legacyCode, useDemo } = await request.json()
 
     if (!sessionId || !filename || !targetLanguage || !legacyCode) {
       return NextResponse.json(
@@ -16,11 +18,23 @@ export async function POST(request: NextRequest) {
     const sourceLanguage = detectLanguage(filename)
     const langKey = sourceLanguage.toLowerCase().replace(/[^a-z0-9]/g, '')
 
-    // Use mock transformation data
-    const mockData = (MOCK_TRANSFORMATIONS as any)[langKey] || MOCK_TRANSFORMATIONS.cobol
-    
-    // Generate code based on target language
-    const transformedCode = generateTransformedCode(mockData, targetLanguage, sourceLanguage)
+    let transformedCode: string
+
+    // Use AI if available and not explicitly requesting demo
+    if (USE_REAL_AI && useDemo !== true) {
+      try {
+        transformedCode = await transformWithAI(legacyCode, sourceLanguage, targetLanguage)
+      } catch (aiError) {
+        console.error('AI transformation failed, falling back to demo:', aiError)
+        // Fallback to mock data if AI fails
+        const mockData = (MOCK_TRANSFORMATIONS as any)[langKey] || MOCK_TRANSFORMATIONS.cobol
+        transformedCode = generateTransformedCode(mockData, targetLanguage, sourceLanguage)
+      }
+    } else {
+      // Use mock transformation data (demo mode)
+      const mockData = (MOCK_TRANSFORMATIONS as any)[langKey] || MOCK_TRANSFORMATIONS.cobol
+      transformedCode = generateTransformedCode(mockData, targetLanguage, sourceLanguage)
+    }
 
     return NextResponse.json({
       success: true,
@@ -30,6 +44,7 @@ export async function POST(request: NextRequest) {
       targetLanguage,
       legacyCode,
       transformedCode,
+      mode: USE_REAL_AI && useDemo !== true ? 'ai' : 'demo',
       stats: {
         originalLines: legacyCode.split('\n').length,
         transformedLines: transformedCode.split('\n').length,
@@ -43,6 +58,71 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
+}
+
+async function transformWithAI(
+  legacyCode: string,
+  sourceLanguage: string,
+  targetLanguage: string
+): Promise<string> {
+  const apiKey = process.env.OPENAI_API_KEY
+
+  if (!apiKey) {
+    throw new Error('OpenAI API key not configured')
+  }
+
+  const prompt = `You are an expert code transformation AI. Transform the following ${sourceLanguage} code to modern ${targetLanguage}.
+
+Requirements:
+1. Preserve all business logic exactly
+2. Use modern ${targetLanguage} idioms and best practices
+3. Add proper type annotations if applicable
+4. Include error handling
+5. Make the code production-ready
+6. Add brief comments explaining complex transformations
+
+Source Code (${sourceLanguage}):
+\`\`\`
+${legacyCode}
+\`\`\`
+
+Transform this to ${targetLanguage}. Return ONLY the transformed code, no explanations.`
+
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: 'gpt-4-turbo-preview',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are an expert software engineer specializing in legacy code modernization. You transform old code to modern frameworks while preserving business logic perfectly.'
+        },
+        {
+          role: 'user',
+          content: prompt
+        }
+      ],
+      temperature: 0.3,
+      max_tokens: 2000
+    })
+  })
+
+  if (!response.ok) {
+    throw new Error(`OpenAI API error: ${response.statusText}`)
+  }
+
+  const data = await response.json()
+  const transformedCode = data.choices[0]?.message?.content || ''
+
+  // Clean up code blocks if GPT wrapped it
+  return transformedCode
+    .replace(/```[\w]*\n/g, '')
+    .replace(/```$/g, '')
+    .trim()
 }
 
 function detectLanguage(filename: string): string {
