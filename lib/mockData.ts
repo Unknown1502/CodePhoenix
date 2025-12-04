@@ -243,6 +243,372 @@ const Calculator: React.FC<CalculatorProps> = () => {
 export default Calculator;`
   },
 
+  fortran: {
+    original: `      PROGRAM INVENTORY
+      IMPLICIT NONE
+      INTEGER :: ITEMID, ITEMQTY, I
+      REAL :: ITEMPRICE, TOTALVAL
+      CHARACTER(30) :: ITEMNAME
+      
+      TOTALVAL = 0.0
+      PRINT *, 'Inventory System Started'
+      
+      ITEMID = 123456
+      ITEMNAME = 'Widget A'
+      ITEMPRICE = 99.99
+      ITEMQTY = 100
+      
+      TOTALVAL = TOTALVAL + (ITEMPRICE * ITEMQTY)
+      PRINT *, 'Processed: ', TRIM(ITEMNAME)
+      
+      PRINT *, 'Total Value: ', TOTALVAL
+      PRINT *, 'Inventory Complete'
+      
+      END PROGRAM INVENTORY`,
+    transformed: `// Modernized from Fortran 77
+
+interface InventoryItem {
+  itemId: number;
+  itemName: string;
+  itemPrice: number;
+  itemQuantity: number;
+}
+
+class InventorySystem {
+  private totalValue: number = 0;
+
+  run(): void {
+    console.log('Inventory System Started');
+    
+    const item: InventoryItem = {
+      itemId: 123456,
+      itemName: 'Widget A',
+      itemPrice: 99.99,
+      itemQuantity: 100
+    };
+
+    this.totalValue += item.itemPrice * item.itemQuantity;
+    console.log(\`Processed: \${item.itemName}\`);
+    
+    console.log(\`Total Value: \${this.totalValue}\`);
+    console.log('Inventory Complete');
+  }
+}
+
+new InventorySystem().run();`
+  },
+
+  pascal: {
+    original: `program InventorySystem;
+
+uses SysUtils;
+
+type
+  TItemRecord = record
+    ItemID: Integer;
+    ItemName: string[30];
+    ItemPrice: Real;
+    ItemQuantity: Integer;
+  end;
+
+var
+  Item: TItemRecord;
+  TotalValue: Real;
+
+begin
+  TotalValue := 0.0;
+  WriteLn('Inventory System Started');
+  
+  Item.ItemID := 123456;
+  Item.ItemName := 'Widget A';
+  Item.ItemPrice := 99.99;
+  Item.ItemQuantity := 100;
+  
+  TotalValue := TotalValue + (Item.ItemPrice * Item.ItemQuantity);
+  WriteLn('Processed: ', Item.ItemName);
+  
+  WriteLn('Total Value: ', TotalValue:0:2);
+  WriteLn('Inventory Complete');
+end.`,
+    transformed: `// Modernized from Pascal
+
+interface ItemRecord {
+  itemId: number;
+  itemName: string;
+  itemPrice: number;
+  itemQuantity: number;
+}
+
+class InventorySystem {
+  private totalValue: number = 0;
+
+  run(): void {
+    console.log('Inventory System Started');
+    
+    const item: ItemRecord = {
+      itemId: 123456,
+      itemName: 'Widget A',
+      itemPrice: 99.99,
+      itemQuantity: 100
+    };
+
+    this.totalValue += item.itemPrice * item.itemQuantity;
+    console.log(\`Processed: \${item.itemName}\`);
+    
+    console.log(\`Total Value: \${this.totalValue.toFixed(2)}\`);
+    console.log('Inventory Complete');
+  }
+}
+
+new InventorySystem().run();`
+  },
+
+  perl: {
+    original: `#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+my $total_value = 0;
+
+print "Inventory System Started\\n";
+
+my %item = (
+    item_id => 123456,
+    item_name => 'Widget A',
+    item_price => 99.99,
+    item_quantity => 100
+);
+
+$total_value += $item{item_price} * $item{item_quantity};
+print "Processed: $item{item_name}\\n";
+
+printf "Total Value: %.2f\\n", $total_value;
+print "Inventory Complete\\n";`,
+    transformed: `// Modernized from Perl
+
+interface Item {
+  itemId: number;
+  itemName: string;
+  itemPrice: number;
+  itemQuantity: number;
+}
+
+class InventorySystem {
+  private totalValue: number = 0;
+
+  run(): void {
+    console.log('Inventory System Started');
+    
+    const item: Item = {
+      itemId: 123456,
+      itemName: 'Widget A',
+      itemPrice: 99.99,
+      itemQuantity: 100
+    };
+
+    this.totalValue += item.itemPrice * item.itemQuantity;
+    console.log(\`Processed: \${item.itemName}\`);
+    
+    console.log(\`Total Value: \${this.totalValue.toFixed(2)}\`);
+    console.log('Inventory Complete');
+  }
+}
+
+new InventorySystem().run();`
+  },
+
+  delphi: {
+    original: `unit InventoryUnit;
+
+interface
+
+type
+  TItemRecord = class
+    ItemID: Integer;
+    ItemName: String;
+    ItemPrice: Double;
+    ItemQuantity: Integer;
+  end;
+
+implementation
+
+var
+  TotalValue: Double;
+
+procedure ProcessInventory;
+var
+  Item: TItemRecord;
+begin
+  TotalValue := 0.0;
+  WriteLn('Inventory System Started');
+  
+  Item := TItemRecord.Create;
+  try
+    Item.ItemID := 123456;
+    Item.ItemName := 'Widget A';
+    Item.ItemPrice := 99.99;
+    Item.ItemQuantity := 100;
+    
+    TotalValue := TotalValue + (Item.ItemPrice * Item.ItemQuantity);
+    WriteLn('Processed: ' + Item.ItemName);
+  finally
+    Item.Free;
+  end;
+  
+  WriteLn(Format('Total Value: %.2f', [TotalValue]));
+  WriteLn('Inventory Complete');
+end;
+
+end.`,
+    transformed: `// Modernized from Delphi
+
+class ItemRecord {
+  constructor(
+    public itemId: number,
+    public itemName: string,
+    public itemPrice: number,
+    public itemQuantity: number
+  ) {}
+}
+
+class InventorySystem {
+  private totalValue: number = 0;
+
+  processInventory(): void {
+    console.log('Inventory System Started');
+    
+    const item = new ItemRecord(123456, 'Widget A', 99.99, 100);
+    
+    this.totalValue += item.itemPrice * item.itemQuantity;
+    console.log(\`Processed: \${item.itemName}\`);
+    
+    console.log(\`Total Value: \${this.totalValue.toFixed(2)}\`);
+    console.log('Inventory Complete');
+  }
+}
+
+new InventorySystem().processInventory();`
+  },
+
+  rpg: {
+    original: `     H DFTACTGRP(*NO) ACTGRP(*NEW)
+     
+     D ItemRec         DS
+     D  ItemID                       10I 0
+     D  ItemName                     30A
+     D  ItemPrice                    15P 2
+     D  ItemQty                      10I 0
+     
+     D TotalValue      S             15P 2
+     
+     C                   EVAL      TotalValue = 0
+     C                   DSPLY     'Inventory System Started'
+     
+     C                   EVAL      ItemID = 123456
+     C                   EVAL      ItemName = 'Widget A'
+     C                   EVAL      ItemPrice = 99.99
+     C                   EVAL      ItemQty = 100
+     
+     C                   EVAL      TotalValue = TotalValue +
+     C                             (ItemPrice * ItemQty)
+     C                   DSPLY     'Processed: ' + ItemName
+     
+     C                   DSPLY     'Total Value: ' + %CHAR(TotalValue)
+     C                   SETON                                        LR`,
+    transformed: `// Modernized from RPG
+
+interface ItemRecord {
+  itemId: number;
+  itemName: string;
+  itemPrice: number;
+  itemQty: number;
+}
+
+class InventorySystem {
+  private totalValue: number = 0;
+
+  run(): void {
+    console.log('Inventory System Started');
+    
+    const item: ItemRecord = {
+      itemId: 123456,
+      itemName: 'Widget A',
+      itemPrice: 99.99,
+      itemQty: 100
+    };
+
+    this.totalValue += item.itemPrice * item.itemQty;
+    console.log(\`Processed: \${item.itemName}\`);
+    
+    console.log(\`Total Value: \${this.totalValue}\`);
+  }
+}
+
+new InventorySystem().run();`
+  },
+
+  ada: {
+    original: `with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Inventory_System is
+   type Item_Record is record
+      Item_ID       : Integer;
+      Item_Name     : String(1..30);
+      Item_Price    : Float;
+      Item_Quantity : Integer;
+   end record;
+
+   Item        : Item_Record;
+   Total_Value : Float := 0.0;
+
+begin
+   Put_Line("Inventory System Started");
+   
+   Item.Item_ID := 123456;
+   Item.Item_Name := "Widget A                      ";
+   Item.Item_Price := 99.99;
+   Item.Item_Quantity := 100;
+   
+   Total_Value := Total_Value + (Item.Item_Price * Float(Item.Item_Quantity));
+   Put_Line("Processed: " & Item.Item_Name);
+   
+   Put_Line("Total Value:" & Float'Image(Total_Value));
+   Put_Line("Inventory Complete");
+end Inventory_System;`,
+    transformed: `// Modernized from Ada
+
+interface ItemRecord {
+  itemId: number;
+  itemName: string;
+  itemPrice: number;
+  itemQuantity: number;
+}
+
+class InventorySystem {
+  private totalValue: number = 0;
+
+  run(): void {
+    console.log('Inventory System Started');
+    
+    const item: ItemRecord = {
+      itemId: 123456,
+      itemName: 'Widget A',
+      itemPrice: 99.99,
+      itemQuantity: 100
+    };
+
+    this.totalValue += item.itemPrice * item.itemQuantity;
+    console.log(\`Processed: \${item.itemName}\`);
+    
+    console.log(\`Total Value: \${this.totalValue}\`);
+    console.log('Inventory Complete');
+  }
+}
+
+new InventorySystem().run();`
+  },
+
   php: {
     original: `<?php
 // Legacy user management system
@@ -432,6 +798,222 @@ export const MOCK_ANALYSIS = {
         line: 8
       }
     ],
+    technicalDebt: [
+      'VB6 runtime dependency (obsolete)',
+      'Forms-based architecture',
+      'No separation of concerns',
+      'Limited to Windows platform'
+    ],
+    estimatedMigrationTime: '3-4 weeks',
+    recommendedTarget: 'React with TypeScript',
+    migrationComplexity: 'Low-Medium'
+  },
+
+  fortran: {
+    language: 'Fortran 77',
+    languageVersion: 'F77',
+    linesOfCode: 22,
+    complexity: 3,
+    maintainability: 50,
+    businessLogic: [
+      'Inventory management system',
+      'Item processing with calculation',
+      'Simple console output',
+      'Basic data structures'
+    ],
+    dependencies: [
+      'IMPLICIT NONE declaration',
+      'PRINT statements',
+      'CHARACTER and REAL types'
+    ],
+    securityIssues: [
+      {
+        severity: 'low',
+        description: 'No input validation',
+        line: 10
+      }
+    ],
+    technicalDebt: [
+      'Fixed-format source code',
+      'Limited string handling',
+      'No dynamic memory allocation',
+      'Procedural programming only'
+    ],
+    estimatedMigrationTime: '2-3 weeks',
+    recommendedTarget: 'Python or JavaScript',
+    migrationComplexity: 'Low'
+  },
+
+  pascal: {
+    language: 'Pascal',
+    languageVersion: 'Turbo Pascal 7.0',
+    linesOfCode: 28,
+    complexity: 3,
+    maintainability: 55,
+    businessLogic: [
+      'Inventory system with records',
+      'Item processing and calculation',
+      'Console-based interface',
+      'Structured programming'
+    ],
+    dependencies: [
+      'SysUtils unit',
+      'WriteLn procedures',
+      'Record types'
+    ],
+    securityIssues: [
+      {
+        severity: 'low',
+        description: 'Fixed-length strings',
+        line: 6
+      }
+    ],
+    technicalDebt: [
+      'Limited string types',
+      'No object-oriented features',
+      'Platform-specific runtime',
+      'Outdated I/O system'
+    ],
+    estimatedMigrationTime: '2-3 weeks',
+    recommendedTarget: 'TypeScript or Python',
+    migrationComplexity: 'Low'
+  },
+
+  perl: {
+    language: 'Perl 5',
+    languageVersion: '5.x',
+    linesOfCode: 19,
+    complexity: 2,
+    maintainability: 65,
+    businessLogic: [
+      'Inventory item processing',
+      'Hash-based data structure',
+      'Simple calculation and output',
+      'Formatted printing'
+    ],
+    dependencies: [
+      'strict pragma',
+      'warnings pragma',
+      'Hash data structure'
+    ],
+    securityIssues: [
+      {
+        severity: 'low',
+        description: 'No input sanitization',
+        line: 8
+      }
+    ],
+    technicalDebt: [
+      'Perl 5 syntax (pre-Perl 6/Raku)',
+      'Limited type safety',
+      'Hash-based structures',
+      'Difficult to maintain long-term'
+    ],
+    estimatedMigrationTime: '1-2 weeks',
+    recommendedTarget: 'JavaScript or Python',
+    migrationComplexity: 'Low'
+  },
+
+  delphi: {
+    language: 'Delphi (Object Pascal)',
+    languageVersion: 'Delphi 7',
+    linesOfCode: 35,
+    complexity: 4,
+    maintainability: 60,
+    businessLogic: [
+      'Object-oriented inventory system',
+      'Class-based item records',
+      'Memory management (Create/Free)',
+      'Formatted output'
+    ],
+    dependencies: [
+      'VCL runtime',
+      'Format function',
+      'WriteLn procedure'
+    ],
+    securityIssues: [
+      {
+        severity: 'medium',
+        description: 'Manual memory management risk',
+        line: 26
+      }
+    ],
+    technicalDebt: [
+      'Windows-only VCL dependency',
+      'Manual memory management',
+      'Unit-based architecture',
+      'Legacy Delphi runtime'
+    ],
+    estimatedMigrationTime: '3-4 weeks',
+    recommendedTarget: 'TypeScript or C#',
+    migrationComplexity: 'Medium'
+  },
+
+  rpg: {
+    language: 'RPG IV',
+    languageVersion: 'RPG400',
+    linesOfCode: 25,
+    complexity: 5,
+    maintainability: 40,
+    businessLogic: [
+      'IBM i inventory processing',
+      'Data structure definitions',
+      'Fixed-format operations',
+      'DSPLY operations'
+    ],
+    dependencies: [
+      'IBM i OS',
+      'Data structures (DS)',
+      'Indicators (LR)'
+    ],
+    securityIssues: [
+      {
+        severity: 'low',
+        description: 'No validation',
+        line: 13
+      }
+    ],
+    technicalDebt: [
+      'IBM i platform dependency',
+      'Fixed-format RPG syntax',
+      'Indicator-based control',
+      'Limited portability'
+    ],
+    estimatedMigrationTime: '6-8 weeks',
+    recommendedTarget: 'Java or Node.js',
+    migrationComplexity: 'High'
+  },
+
+  ada: {
+    language: 'Ada',
+    languageVersion: 'Ada 95',
+    linesOfCode: 28,
+    complexity: 4,
+    maintainability: 55,
+    businessLogic: [
+      'Strongly-typed inventory system',
+      'Record-based data structures',
+      'Type-safe operations',
+      'Structured output'
+    ],
+    dependencies: [
+      'Ada.Text_IO package',
+      'Record types',
+      'Float operations'
+    ],
+    securityIssues: [],
+    technicalDebt: [
+      'Ada runtime dependency',
+      'Limited ecosystem',
+      'Niche language',
+      'Verbose syntax'
+    ],
+    estimatedMigrationTime: '3-4 weeks',
+    recommendedTarget: 'TypeScript or Rust',
+    migrationComplexity: 'Medium'
+  },
+
+  php: {
     technicalDebt: [
       'Tight coupling to UI (forms)',
       'No separation of concerns',
