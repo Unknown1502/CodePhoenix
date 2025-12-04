@@ -76,8 +76,8 @@ Transform legacy code to modern languages:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/codephoenix.git
-cd codephoenix
+git clone https://github.com/Unknown1502/CodePhoenix.git
+cd CodePhoenix
 
 # Install dependencies
 npm install
@@ -355,7 +355,7 @@ Feel free to use this for your legacy code migrations!
 - **Live Demo**: [codephoenix.vercel.app](https://codephoenix.vercel.app)
 - **Devpost**: [Link to submission]
 - **Blog Post**: [Link to dev.to post]
-- **GitHub**: [Link to repo]
+- **GitHub**: [github.com/Unknown1502/CodePhoenix](https://github.com/Unknown1502/CodePhoenix)
 - **Twitter**: [@codephoenix](https://twitter.com/codephoenix)
 
 ---
