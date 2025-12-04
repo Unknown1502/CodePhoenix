@@ -1014,18 +1014,6 @@ export const MOCK_ANALYSIS = {
   },
 
   php: {
-    technicalDebt: [
-      'Tight coupling to UI (forms)',
-      'No separation of concerns',
-      'Desktop-only (no web support)',
-      'Legacy VB6 runtime required'
-    ],
-    estimatedMigrationTime: '2-3 weeks',
-    recommendedTarget: 'React with TypeScript',
-    migrationComplexity: 'Low'
-  },
-
-  php: {
     language: 'PHP (Legacy)',
     languageVersion: 'PHP 5.x',
     linesOfCode: 28,
