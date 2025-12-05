@@ -14,16 +14,6 @@ CodePhoenix is an AI-powered platform that brings dead legacy codebases back to 
 
 **Category**: Resurrection 🔥  
 **Built with**: Kiro AI (ALL 5 features showcase)  
-**Timeline**: 72 hours  
-**Prize Target**: Overall 1st Place ($30,000) + Blog Post ($100)
-
-### Why CodePhoenix Wins
-
-| Criteria | Score | Justification |
-|----------|-------|---------------|
-| **Potential Value** | 10/10 | • $85B global technical debt crisis<br>• Saves 6-18 months migration time<br>• $500k+ ROI per company<br>• Every enterprise needs this |
-| **Implementation** | 10/10 | • Uses ALL 5 Kiro features deeply<br>• Complex AI pipeline<br>• Multi-language support<br>• Production-ready code |
-| **Quality & Design** | 10/10 | • Stunning "phoenix rising" theme<br>• Professional enterprise UI<br>• Smooth animations<br>• Memorable branding |
 
 ---
 
